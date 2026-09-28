@@ -1,16 +1,70 @@
-# React + Vite
+# Todo List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React practice project: a small to-do app where you can add tasks, mark them as finished, and delete them. Built to practice component composition, state, and passing functions between components.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Add a task** — type into a controlled input and press Add; the new task is appended to the list.
+- **Mark as finished** — click a task to toggle it; finished tasks are struck through and dimmed. Click again to undo.
+- **Delete a task** — each task has its own Delete button. Clicking it removes only that task and does not toggle it (event propagation is stopped).
+- **Dark theme** — colors are managed with CSS variables (`--page-bg`, `--card-bg`, `--text`, `--text-muted`, `--accent`) in `index.css`.
 
-## React Compiler
+## Project structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+src/
+├─ main.jsx              — entry point, renders TodoList
+├─ index.css             — CSS variables and all styles
+├─ TodoList.jsx          — root component, owns the task list state
+├─ Input/
+│  ├─ Input.jsx          — controlled text input, owns the input value
+│  └─ Input.css
+├─ Add/
+│  └─ Add.jsx            — Add button
+└─ DeleteBtn/
+   ├─ DeleteBtn.jsx      — Delete button, stops click from bubbling to the task
+   └─ DeleteBtn.css
+```
 
-## Expanding the ESLint configuration
+## How it works
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Each task is an object:
+
+```js
+{ id: 1735000000000, text: 'Learn React', finished: false }
+```
+
+The list lives in a single `useState` array inside `TodoList`. Every change creates a **new array** instead of mutating the old one:
+
+| Action | Technique |
+|---|---|
+| Add | spread the old array and append a new object (`id` comes from `Date.now()`) |
+| Toggle finished | `map` over the array, copy the matching task with `finished` flipped, keep the others unchanged |
+| Delete | `filter` out the task whose `id` matches |
+
+Data flow between components:
+
+- `Input` keeps the text being typed in its own state, and calls the `onAdd` function it receives from `TodoList`, passing the current text.
+- `DeleteBtn` receives a handler through props and calls `e.stopPropagation()` before running it, so the click does not also toggle the parent `<li>`.
+
+## React concepts practiced
+
+- Components, JSX, props
+- `useState` and controlled inputs
+- Passing functions from parent to child (child-to-parent communication)
+- Immutable state updates with spread, `map`, and `filter`
+- Lists and `key` with `map`
+- Conditional `className`
+- Event handling and event bubbling (`stopPropagation`)
+
+## Tech stack
+
+- React + Vite
+- Plain CSS with CSS variables
+
+## Running the project
+
+```bash
+npm install
+npm run dev
+```

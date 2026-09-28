@@ -1,0 +1,10 @@
+.add-btn {
+    background: var(--accent);
+    color: var(--page-bg);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+}

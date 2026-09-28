@@ -1,0 +1,16 @@
+.add-task-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.todo-input {
+    flex: 1;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 2px solid var(--text-muted);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 16px;
+}
